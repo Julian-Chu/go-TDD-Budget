@@ -11,18 +11,18 @@ type Budget struct {
 }
 
 func (b Budget) GetDays() float64 {
-	date, err := time.Parse("200601", b.YearMonth)
-
-	if err != nil {
-		fmt.Print(err.Error())
-	}
+	date := b.getDate()
 	return float64(date.AddDate(0, 1, 0).Sub(date).Hours() / 24)
 }
 
-func (b Budget) FirstDay() time.Time {
+func (b Budget) getDate() time.Time {
 	date, err := time.Parse("200601", b.YearMonth)
 	if err != nil {
 		fmt.Print(err.Error())
 	}
 	return date
+}
+
+func (b Budget) FirstDay() time.Time {
+	return b.getDate()
 }
