@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-var m = MockRepo{func() []Budget {
+var m = &MockRepo{func() []Budget {
 	return []Budget{}
 }}
 var service = NewBudgetService(m)
@@ -35,7 +35,7 @@ func Test_period_inside_budget_month(t *testing.T) {
 		time.Date(2019, 04, 01, 0, 0, 0, 0, time.UTC),
 	)
 
-	expected := float64(0)
+	expected := float64(1)
 	assert.Equal(t, expected, actual, "")
 }
 
