@@ -114,6 +114,21 @@ func Test_invalid_period(t *testing.T) {
 	assert.Equal(t, expected, actual, "")
 }
 
+func Test_dailyamount_is_10(t *testing.T) {
+	m.getAll = func() []Budget {
+		return []Budget{
+			{YearMonth: "201904", Amount: 300},
+		}
+	}
+	actual := service.Query(
+		time.Date(2019, 04, 01, 0, 0, 0, 0, time.UTC),
+		time.Date(2019, 04, 02, 0, 0, 0, 0, time.UTC),
+	)
+
+	expected := float64(20)
+	assert.Equal(t, expected, actual, "")
+}
+
 type MockRepo struct {
 	getAll func() []Budget
 }
