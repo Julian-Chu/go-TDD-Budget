@@ -30,3 +30,7 @@ func (b Budget) FirstDay() time.Time {
 func (b Budget) LastDay() time.Time {
 	return b.FirstDay().AddDate(0, 1, -1)
 }
+
+func (b Budget) DailyAmount() float64 {
+	return b.Amount / b.GetDays()
+}
