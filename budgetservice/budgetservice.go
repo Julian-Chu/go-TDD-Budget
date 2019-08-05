@@ -20,7 +20,11 @@ func (s BudgetService) Query(queryStart time.Time, queryEnd time.Time) float64 {
 		end = budgets[0].LastDay()
 	}
 
-	days := float64(end.Sub(queryStart).Hours()/24 + 1)
+	start := queryStart
+	if budgets[0].FirstDay().After(queryStart) {
+		start = budgets[0].FirstDay()
+	}
+	days := float64(end.Sub(start).Hours()/24 + 1)
 	getDays := budgets[0].GetDays()
 	return (budgets[0].Amount / getDays) * days
 }
