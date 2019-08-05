@@ -129,6 +129,23 @@ func Test_dailyamount_is_10(t *testing.T) {
 	assert.Equal(t, expected, actual, "")
 }
 
+func Test_multibudgets(t *testing.T) {
+	m.getAll = func() []Budget {
+		return []Budget{
+			{YearMonth: "201903", Amount: 310},
+			{YearMonth: "201904", Amount: 30},
+			{YearMonth: "201905", Amount: 3100},
+		}
+	}
+	actual := service.Query(
+		time.Date(2019, 03, 31, 0, 0, 0, 0, time.UTC),
+		time.Date(2019, 05, 03, 0, 0, 0, 0, time.UTC),
+	)
+
+	expected := float64(340)
+	assert.Equal(t, expected, actual, "")
+}
+
 type MockRepo struct {
 	getAll func() []Budget
 }
