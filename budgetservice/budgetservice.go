@@ -12,13 +12,15 @@ func NewBudgetService(repo IRepo) *BudgetService {
 
 func (s BudgetService) Query(queryStart time.Time, queryEnd time.Time) float64 {
 	budgets := s.repo.GetAll()
-	if s.isNoBudget(budgets) || s.isNoOverlap(queryEnd, budgets, queryStart) {
+	if s.isNoBudget(budgets) {
 		return 0
 	}
 
 	sum := float64(0)
 	for _, budget := range budgets {
-
+		if s.isNoOverlap(queryEnd, queryStart, budget) {
+			continue
+		}
 		end := queryEnd
 		if budget.LastDay().Before(queryEnd) {
 			end = budget.LastDay()
@@ -39,6 +41,6 @@ func (s BudgetService) isNoBudget(budgets []Budget) bool {
 	return len(budgets) == 0
 }
 
-func (s BudgetService) isNoOverlap(end time.Time, budgets []Budget, start time.Time) bool {
-	return end.Before(budgets[0].FirstDay()) || start.After(budgets[0].LastDay())
+func (s BudgetService) isNoOverlap(end time.Time, start time.Time, budget Budget) bool {
+	return end.Before(budget.FirstDay()) || start.After(budget.LastDay())
 }
