@@ -10,12 +10,17 @@ func NewBudgetService(repo IRepo) *BudgetService {
 	return &BudgetService{repo: repo}
 }
 
-func (s BudgetService) Query(start time.Time, end time.Time) float64 {
+func (s BudgetService) Query(queryStart time.Time, queryEnd time.Time) float64 {
 	budgets := s.repo.GetAll()
-	if s.isNoBudget(budgets) || s.isNoOverlap(end, budgets, start) {
+	if s.isNoBudget(budgets) || s.isNoOverlap(queryEnd, budgets, queryStart) {
 		return 0
 	}
-	days := float64(end.Sub(start).Hours()/24 + 1)
+	end := queryEnd
+	if budgets[0].LastDay().Before(queryEnd) {
+		end = budgets[0].LastDay()
+	}
+
+	days := float64(end.Sub(queryStart).Hours()/24 + 1)
 	getDays := budgets[0].GetDays()
 	return (budgets[0].Amount / getDays) * days
 }
