@@ -26,3 +26,7 @@ func (b Budget) getDate() time.Time {
 func (b Budget) FirstDay() time.Time {
 	return b.getDate()
 }
+
+func (b Budget) LastDay() time.Time {
+	return b.FirstDay().AddDate(0, 1, -1)
+}
