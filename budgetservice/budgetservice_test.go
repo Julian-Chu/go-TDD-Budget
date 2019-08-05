@@ -99,6 +99,21 @@ func Test_period_cross_budget_month(t *testing.T) {
 	assert.Equal(t, expected, actual, "")
 }
 
+func Test_invalid_period(t *testing.T) {
+	m.getAll = func() []Budget {
+		return []Budget{
+			{YearMonth: "201904", Amount: 30},
+		}
+	}
+	actual := service.Query(
+		time.Date(2019, 04, 02, 0, 0, 0, 0, time.UTC),
+		time.Date(2019, 04, 01, 0, 0, 0, 0, time.UTC),
+	)
+
+	expected := float64(0)
+	assert.Equal(t, expected, actual, "")
+}
+
 type MockRepo struct {
 	getAll func() []Budget
 }
