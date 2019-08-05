@@ -54,6 +54,21 @@ func Test_no_overlap_before_budget_firstday(t *testing.T) {
 	assert.Equal(t, expected, actual, "")
 }
 
+func Test_no_overlap_after_budget_lastday(t *testing.T) {
+	m.getAll = func() []Budget {
+		return []Budget{
+			{YearMonth: "201904", Amount: 30},
+		}
+	}
+	actual := service.Query(
+		time.Date(2019, 05, 01, 0, 0, 0, 0, time.UTC),
+		time.Date(2019, 05, 01, 0, 0, 0, 0, time.UTC),
+	)
+
+	expected := float64(0)
+	assert.Equal(t, expected, actual, "")
+}
+
 type MockRepo struct {
 	getAll func() []Budget
 }
