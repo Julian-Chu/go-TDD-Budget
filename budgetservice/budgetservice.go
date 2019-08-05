@@ -15,18 +15,24 @@ func (s BudgetService) Query(queryStart time.Time, queryEnd time.Time) float64 {
 	if s.isNoBudget(budgets) || s.isNoOverlap(queryEnd, budgets, queryStart) {
 		return 0
 	}
-	end := queryEnd
-	if budgets[0].LastDay().Before(queryEnd) {
-		end = budgets[0].LastDay()
-	}
 
-	start := queryStart
-	if budgets[0].FirstDay().After(queryStart) {
-		start = budgets[0].FirstDay()
+	sum := float64(0)
+	for _, budget := range budgets {
+
+		end := queryEnd
+		if budget.LastDay().Before(queryEnd) {
+			end = budget.LastDay()
+		}
+
+		start := queryStart
+		if budget.FirstDay().After(queryStart) {
+			start = budget.FirstDay()
+		}
+		days := float64(end.Sub(start).Hours()/24 + 1)
+		getDays := budget.GetDays()
+		sum += (budget.Amount / getDays) * days
 	}
-	days := float64(end.Sub(start).Hours()/24 + 1)
-	getDays := budgets[0].GetDays()
-	return (budgets[0].Amount / getDays) * days
+	return sum
 }
 
 func (s BudgetService) isNoBudget(budgets []Budget) bool {
